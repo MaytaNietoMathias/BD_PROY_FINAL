@@ -4,6 +4,7 @@
  */
 package VISTA;
 
+import CONTROLADOR.CompraControlador;
 import CONTROLADOR.Conexion;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
@@ -14,6 +15,10 @@ import java.awt.Insets;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.Statement;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.ZoneId;
+import java.util.Map;
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
@@ -43,9 +48,13 @@ public class VistaRegistrarCompra extends JFrame{
     private JTextField campoCantidad;
     private JTextField campoMonto;
     private JSpinner campoFecha;
+    private CompraControlador compraControlador;
+    private Map<String, Integer> proveedoresMap;
+    private Map<String, Integer> productosMap;
     
     public VistaRegistrarCompra(JFrame menuPrincipal) {
         this.menuPrincipal = menuPrincipal;
+        this.compraControlador = new CompraControlador();
         setTitle("Registrar Compra");
         setSize(1100, 600);
         setLocationRelativeTo(null);
@@ -77,12 +86,24 @@ public class VistaRegistrarCompra extends JFrame{
         campoProveedor.setPreferredSize(new Dimension(150, 25));
         panelRegistro.add(campoProveedor, gbc);
         
+        gbc.gridx = 2;
+        JButton btnNuevoProveedor = new JButton("+ Nuevo");
+        btnNuevoProveedor.setToolTipText("Agregar nuevo proveedor");
+        btnNuevoProveedor.addActionListener(e -> abrirDialogoNuevoProveedor());
+        panelRegistro.add(btnNuevoProveedor, gbc);
+        
         gbc.gridx = 0; gbc.gridy = 1;
         panelRegistro.add(new JLabel("Producto:"), gbc);
         gbc.gridx = 1;
         campoProducto = new JComboBox<>();
         campoProducto.setPreferredSize(new Dimension(150, 25));
         panelRegistro.add(campoProducto, gbc);
+        
+        gbc.gridx = 2;
+        JButton btnNuevoProducto = new JButton("+ Nuevo");
+        btnNuevoProducto.setToolTipText("Agregar nuevo producto");
+        btnNuevoProducto.addActionListener(e -> abrirDialogoNuevoProducto());
+        panelRegistro.add(btnNuevoProducto, gbc);
         
         gbc.gridx = 0; gbc.gridy = 2;
         panelRegistro.add(new JLabel("Cantidad:"), gbc);
@@ -104,11 +125,9 @@ public class VistaRegistrarCompra extends JFrame{
         campoFecha.setPreferredSize(new Dimension(120, 25));
         panelRegistro.add(campoFecha, gbc);
         
-        gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 2;
+        gbc.gridx = 0; gbc.gridy = 5; gbc.gridwidth = 3;
         JButton btnRegistrar = new JButton("Registrar Compra");
-        // 🔹 sin acción por ahora
-        btnRegistrar.addActionListener(e ->
-                JOptionPane.showMessageDialog(this,"La funcionalidad 'Registrar Compra' aún no implementada."));
+        btnRegistrar.addActionListener(e -> registrarCompra());
         
         JButton btnCerrar = new JButton("Cerrar");
         btnCerrar.addActionListener(e -> {
@@ -117,6 +136,7 @@ public class VistaRegistrarCompra extends JFrame{
         });
         
         JPanel panelInferior = new JPanel();
+        panelInferior.add(btnRegistrar);
         panelInferior.add(btnCerrar);
         
         setLayout(new BorderLayout(15, 15));
@@ -129,6 +149,8 @@ public class VistaRegistrarCompra extends JFrame{
                 BorderFactory.createEmptyBorder(15, 15, 15, 15)
         );
         cargarCompras();
+        cargarProveedores();
+        cargarProductos();
     }
     
     private void cargarCompras() {
@@ -161,6 +183,112 @@ public class VistaRegistrarCompra extends JFrame{
         } catch (Exception e) {
             JOptionPane.showMessageDialog(this,
                     "Error al cargar compras:\n" + e.getMessage());
+        }
+    }
+    
+    private void cargarProveedores() {
+        Map<Integer, String> mapa = compraControlador.obtenerProveedores();
+        proveedoresMap = new java.util.HashMap<>();
+        campoProveedor.removeAllItems();
+        for (Map.Entry<Integer, String> entry : mapa.entrySet()) {
+            proveedoresMap.put(entry.getValue(), entry.getKey());
+            campoProveedor.addItem(entry.getValue());
+        }
+    }
+    
+    private void cargarProductos() {
+        Map<Integer, String> mapa = compraControlador.obtenerProductos();
+        productosMap = new java.util.HashMap<>();
+        campoProducto.removeAllItems();
+        for (Map.Entry<Integer, String> entry : mapa.entrySet()) {
+            productosMap.put(entry.getValue(), entry.getKey());
+            campoProducto.addItem(entry.getValue());
+        }
+    }
+    
+    private void registrarCompra() {
+        try {
+            // Validar que todos los campos estén llenos
+            if (campoProveedor.getSelectedItem() == null || 
+                campoProducto.getSelectedItem() == null || 
+                campoCantidad.getText().trim().isEmpty() || 
+                campoMonto.getText().trim().isEmpty()) {
+                JOptionPane.showMessageDialog(this, "Por favor complete todos los campos.", "Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            // Obtener valores
+            String proveedorNombre = (String) campoProveedor.getSelectedItem();
+            String productoNombre = (String) campoProducto.getSelectedItem();
+            int idProveedor = proveedoresMap.get(proveedorNombre);
+            int idProducto = productosMap.get(productoNombre);
+            
+            int cantidad = Integer.parseInt(campoCantidad.getText().trim());
+            java.math.BigDecimal monto = new java.math.BigDecimal(campoMonto.getText().trim());
+            
+            if (cantidad <= 0 || monto.compareTo(java.math.BigDecimal.ZERO) <= 0) {
+                JOptionPane.showMessageDialog(this, "Cantidad y monto deben ser mayores a 0.", "Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            // Obtener fecha del JSpinner y convertir a LocalDate
+            java.util.Date fechaUtil = (java.util.Date) campoFecha.getValue();
+            java.time.LocalDate fecha = fechaUtil.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalDate();
+            
+            // Registrar compra
+            boolean exito = compraControlador.registrarCompra(idProveedor, idProducto, cantidad, monto, fecha);
+            
+            if (exito) {
+                JOptionPane.showMessageDialog(this, "Compra registrada exitosamente.", "Éxito", JOptionPane.INFORMATION_MESSAGE);
+                
+                // Limpiar campos
+                campoCantidad.setText("");
+                campoMonto.setText("");
+                campoFecha.setValue(new java.util.Date());
+                
+                // Recargar tabla
+                cargarCompras();
+            } else {
+                JOptionPane.showMessageDialog(this, "Error al registrar la compra.", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (NumberFormatException ex) {
+            JOptionPane.showMessageDialog(this, "Cantidad y Monto deben ser números válidos.", "Error", JOptionPane.ERROR_MESSAGE);
+        } catch (Exception ex) {
+            JOptionPane.showMessageDialog(this, "Error: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    private void abrirDialogoNuevoProveedor() {
+        NuevoProveedor dialogo = new NuevoProveedor(this, compraControlador);
+        dialogo.setVisible(true);
+        
+        // Si se guardó exitosamente, recargar ComboBox
+        if (dialogo.fueGuardado()) {
+            cargarProveedores();
+        }
+    }
+
+    private void abrirDialogoNuevoProducto() {
+        // Validar que hay un proveedor seleccionado
+        if (campoProveedor.getSelectedItem() == null) {
+            JOptionPane.showMessageDialog(this, "Por favor selecciona un proveedor primero.", "Advertencia", JOptionPane.WARNING_MESSAGE);
+            return;
+        }
+
+        String proveedorNombre = (String) campoProveedor.getSelectedItem();
+        Integer idProveedor = proveedoresMap.get(proveedorNombre);
+
+        if (idProveedor == null) {
+            JOptionPane.showMessageDialog(this, "Error: Proveedor no válido.", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        nuevoProducto dialogo = new nuevoProducto(this, compraControlador, idProveedor);
+        dialogo.setVisible(true);
+        
+        // Si se guardó exitosamente, recargar ComboBox
+        if (dialogo.fueGuardado()) {
+            cargarProductos();
         }
     }
 }

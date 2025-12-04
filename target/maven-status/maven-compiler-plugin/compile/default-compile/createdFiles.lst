@@ -6,6 +6,7 @@ MODELO\Empleado.class
 MODELO\LogueoUsuarios.class
 MODELO\AutenticacionModelo.class
 MODELO\ProductoModelo.class
+CONTROLADOR\CompraControlador.class
 CONTROLADOR\ControladorLogin.class
 CONTROLADOR\ControladorPermisosUsuarios.class
 VISTA\VistaMenu.class
@@ -17,8 +18,11 @@ VISTA\VistaLogin.class
 VISTA\VistaProductos$2.class
 MODELO\ModeloConexion.class
 com\mycompany\proyectobdii\Principal.class
+VISTA\nuevoProducto.class
 VISTA\VistaEmpleados.class
 CONTROLADOR\ProductoControlador.class
+MODELO\ProveedorModelo.class
+VISTA\NuevoProveedor.class
 CONTROLADOR\ControladorEmpleado.class
 VISTA\VistaLogin$1.class
 CONTROLADOR\ClienteControlador.class

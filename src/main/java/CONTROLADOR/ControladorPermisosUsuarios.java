@@ -7,23 +7,23 @@ package CONTROLADOR;
 public class ControladorPermisosUsuarios {
 
     public static boolean puedeRegistrarVenta(String rol) {
-        return rol.equals("ADMIN") || rol.equals("VENTAS");
+        return rol != null && (rol.equalsIgnoreCase("Administrador") || rol.equalsIgnoreCase("Ventas"));
     }
 
     public static boolean puedeRegistrarCompra(String rol) {
-        return rol.equals("ADMIN") || rol.equals("COMPRAS");
+        return rol != null && (rol.equalsIgnoreCase("Administrador") || rol.equalsIgnoreCase("Compras"));
     }
 
     public static boolean puedeAccederClientes(String rol) {
-        return rol.equals("ADMIN") || rol.equals("VENTAS") || rol.equals("COMPRAS");
+        return rol != null && (rol.equalsIgnoreCase("Administrador") || rol.equalsIgnoreCase("Ventas") || rol.equalsIgnoreCase("Compras"));
     }
 
     public static boolean puedeAccederInventario(String rol) {
-        return rol.equals("ADMIN");
+        return rol != null && rol.equalsIgnoreCase("Administrador");
     }
     
     public static boolean puedeAccederLogueoUsuarios(String rol) {
-        return rol.equals("Administrador");
+        return rol != null && rol.equalsIgnoreCase("Administrador");
     }
 }
 
