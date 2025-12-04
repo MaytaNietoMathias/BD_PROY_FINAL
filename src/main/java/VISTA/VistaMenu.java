@@ -132,7 +132,7 @@ public class VistaMenu extends JFrame {
 
         //fin boton registrar compra
         //inicio boton ultima venta
-        JButton btnUltimaVenta = new JButton("Última Boleta de Venta");
+        JButton btnUltimaVenta = new JButton("Empleados");
         btnUltimaVenta.setFont(btnFont);
         btnUltimaVenta.setBackground(new Color(200, 222, 233));
         btnUltimaVenta.setForeground(new Color(21, 101, 192));
@@ -140,7 +140,19 @@ public class VistaMenu extends JFrame {
         btnUltimaVenta.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnUltimaVenta.setIcon(UIManager.getIcon("FileView.fileIcon"));
         btnUltimaVenta.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Funcionalidad de 'Última Boleta de Venta' aún no implementada.");
+            String rolUsuario = ControladorLogin.getUsuarioActual().getRol();
+
+            if ("Administrador".equalsIgnoreCase(rolUsuario)) {
+                ControladorEmpleado controlador = new ControladorEmpleado(null);
+                VistaEmpleados vista = new VistaEmpleados(controlador);
+                vista.setVisible(true);
+                controlador.setVista(vista);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Acceso Denegado. Solo el rol de Administrador puede gestionar empleados.",
+                        "Permiso Insuficiente",
+                        JOptionPane.WARNING_MESSAGE);
+            }
         });
         //fin boton ultima venta
 
@@ -168,7 +180,7 @@ public class VistaMenu extends JFrame {
         //fin boton ultima compra
 
         //inicio boton empleados
-        JButton btnEmpleados = new JButton("Empleados");
+        /*JButton btnEmpleados = new JButton("Empleados");
         btnEmpleados.setFont(btnFont);
         btnEmpleados.setBackground(new Color(255, 249, 196));
         btnEmpleados.setForeground(new Color(21, 101, 192));
@@ -192,7 +204,7 @@ public class VistaMenu extends JFrame {
                         "Permiso Insuficiente",
                         JOptionPane.WARNING_MESSAGE);
             }
-        });
+        });*/
 
         //fin boton empleados
         //inicio boton salir
