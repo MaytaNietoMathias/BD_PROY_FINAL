@@ -3,6 +3,7 @@ MODELO\UsuarioBD.class
 MODELO\ModeloCliente.class
 VISTA\VistaCliente.class
 MODELO\Empleado.class
+MODELO\LogueoUsuarios.class
 MODELO\AutenticacionModelo.class
 MODELO\ProductoModelo.class
 CONTROLADOR\ControladorLogin.class
@@ -10,6 +11,7 @@ CONTROLADOR\ControladorPermisosUsuarios.class
 VISTA\VistaMenu.class
 VISTA\VistaProductos.class
 VISTA\VistaRegistrarCompra.class
+CONTROLADOR\LogueoUsuariosControlador.class
 VISTA\VistaRegistrarVenta.class
 VISTA\VistaLogin.class
 VISTA\VistaProductos$2.class
@@ -23,5 +25,6 @@ CONTROLADOR\ClienteControlador.class
 CONTROLADOR\Conexion.class
 VISTA\VistaMenu$1.class
 VISTA\VistaRegistrarCompra$1.class
+VISTA\VistaLogueoUsuarios.class
 MODELO\EmpleadoDAO.class
 VISTA\VistaProductos$1.class

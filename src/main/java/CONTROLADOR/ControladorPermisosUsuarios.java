@@ -21,5 +21,9 @@ public class ControladorPermisosUsuarios {
     public static boolean puedeAccederInventario(String rol) {
         return rol.equals("ADMIN");
     }
+    
+    public static boolean puedeAccederLogueoUsuarios(String rol) {
+        return rol.equals("Administrador");
+    }
 }
 

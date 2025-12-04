@@ -152,7 +152,7 @@ public class VistaMenu extends JFrame {
         //fin boton ultima venta
 
         //inicio boton ultima compra
-        JButton btnUltimaCompra = new JButton("Última Boleta de Compra");
+        JButton btnUltimaCompra = new JButton("Registro de Usuarios");
         btnUltimaCompra.setFont(btnFont);
         btnUltimaCompra.setBackground(new Color(225, 245, 215));
         btnUltimaCompra.setForeground(new Color(21, 101, 192));
@@ -160,7 +160,17 @@ public class VistaMenu extends JFrame {
         btnUltimaCompra.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnUltimaCompra.setIcon(UIManager.getIcon("FileView.hardDriveIcon"));
         btnUltimaCompra.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, "Funcionalidad de 'Última Boleta de Compra' aún no implementada.");
+            String rol = ControladorLogin.getUsuarioActual().getRol();
+            
+            if (ControladorPermisosUsuarios.puedeAccederLogueoUsuarios(rol)) {
+                VistaLogueoUsuarios ventanaLogueos = new VistaLogueoUsuarios(this);
+                ventanaLogueos.setVisible(true);
+                this.setVisible(false);
+            } else {
+                JOptionPane.showMessageDialog(this, "No tienes permisos para acceder a Registro de Usuarios.",
+                        "Acceso denegado",
+                        JOptionPane.ERROR_MESSAGE);
+            }
         });
         //fin boton ultima compra
 
