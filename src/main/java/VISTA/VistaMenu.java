@@ -56,12 +56,10 @@ public class VistaMenu extends JFrame {
         btnProductos.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnProductos.setIcon(UIManager.getIcon("FileView.directoryIcon"));
         btnProductos.addActionListener(e -> {
-            // Comprobamos si el constructor de VistaProductos necesita un JFrame como argumento
             if (this != null) {
-                // Crear la ventana de productos y pasarle la ventana principal
                 VistaProductos ventanaProductos = new VistaProductos(this);
                 ventanaProductos.setVisible(true);
-                this.setVisible(false);  // Ocultar la ventana actual (menuPrincipal)
+                this.setVisible(false);
             }
         });
         //fin boton productos
@@ -77,11 +75,10 @@ public class VistaMenu extends JFrame {
         btnClientes.addActionListener(e -> {
             VistaCliente ventanaClientes = new VistaCliente(this);
             ventanaClientes.setVisible(true);
-            this.setVisible(false); // opcional: ocultar menú principal
+            this.setVisible(false);
         });
         //fin boton clientes
 
-        
         //inicio boton registrar venta
         JButton btnRegistrarVenta = new JButton("Registrar Venta");
         btnRegistrarVenta.setFont(btnFont);
@@ -98,7 +95,7 @@ public class VistaMenu extends JFrame {
             if (ControladorPermisosUsuarios.puedeRegistrarVenta(rol)) {
                 VistaRegistrarVenta ventanaVenta = new VistaRegistrarVenta(this);
                 ventanaVenta.setVisible(true);
-                this.setVisible(false); // opcional: ocultar menú principal
+                this.setVisible(false);
             } else {
                 JOptionPane.showMessageDialog(this,
                         "No tienes permisos para acceder a Registrar Venta.",
@@ -108,8 +105,6 @@ public class VistaMenu extends JFrame {
         });
 
         //fin boton registrar venta
-        
-        
         //inicio boton registrar compra
         JButton btnRegistrarCompra = new JButton("Registrar Compra");
         btnRegistrarCompra.setFont(btnFont);
@@ -126,7 +121,7 @@ public class VistaMenu extends JFrame {
             if (ControladorPermisosUsuarios.puedeRegistrarCompra(rol)) {
                 VistaRegistrarCompra ventanaCompra = new VistaRegistrarCompra(this);
                 ventanaCompra.setVisible(true);
-                this.setVisible(false); // opcional: ocultar menú principal
+                this.setVisible(false);
             } else {
                 JOptionPane.showMessageDialog(this,
                         "No tienes permisos para acceder a Registrar Compra.",
@@ -136,8 +131,6 @@ public class VistaMenu extends JFrame {
         });
 
         //fin boton registrar compra
-        
-        
         //inicio boton ultima venta
         JButton btnUltimaVenta = new JButton("Última Boleta de Venta");
         btnUltimaVenta.setFont(btnFont);
@@ -151,7 +144,7 @@ public class VistaMenu extends JFrame {
         });
         //fin boton ultima venta
 
-        //inicio boton ultima compra
+        //inicio boton ultima compra (Registro de Usuarios)
         JButton btnUltimaCompra = new JButton("Registro de Usuarios");
         btnUltimaCompra.setFont(btnFont);
         btnUltimaCompra.setBackground(new Color(225, 245, 215));
@@ -161,7 +154,7 @@ public class VistaMenu extends JFrame {
         btnUltimaCompra.setIcon(UIManager.getIcon("FileView.hardDriveIcon"));
         btnUltimaCompra.addActionListener(e -> {
             String rol = ControladorLogin.getUsuarioActual().getRol();
-            
+
             if (ControladorPermisosUsuarios.puedeAccederLogueoUsuarios(rol)) {
                 VistaLogueoUsuarios ventanaLogueos = new VistaLogueoUsuarios(this);
                 ventanaLogueos.setVisible(true);
@@ -183,11 +176,22 @@ public class VistaMenu extends JFrame {
         btnEmpleados.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btnEmpleados.setIcon(UIManager.getIcon("FileView.computerIcon"));
         btnEmpleados.setPreferredSize(new Dimension(150, 40));
+
+        // RESTAURACIÓN DE LA RESTRICCIÓN DE ACCESO
         btnEmpleados.addActionListener(e -> {
-            ControladorEmpleado controlador = new ControladorEmpleado(null);
-            VistaEmpleados vista = new VistaEmpleados(controlador);
-            vista.setVisible(true);
-            controlador.setVista(vista);
+            String rolUsuario = ControladorLogin.getUsuarioActual().getRol();
+
+            if ("Administrador".equalsIgnoreCase(rolUsuario)) {
+                ControladorEmpleado controlador = new ControladorEmpleado(null);
+                VistaEmpleados vista = new VistaEmpleados(controlador);
+                vista.setVisible(true);
+                controlador.setVista(vista);
+            } else {
+                JOptionPane.showMessageDialog(this,
+                        "Acceso Denegado. Solo el rol de Administrador puede gestionar empleados.",
+                        "Permiso Insuficiente",
+                        JOptionPane.WARNING_MESSAGE);
+            }
         });
 
         //fin boton empleados
