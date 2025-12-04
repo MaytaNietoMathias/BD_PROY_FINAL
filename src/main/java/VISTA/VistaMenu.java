@@ -132,14 +132,14 @@ public class VistaMenu extends JFrame {
 
         //fin boton registrar compra
         //inicio boton ultima venta
-        JButton btnUltimaVenta = new JButton("Empleados");
-        btnUltimaVenta.setFont(btnFont);
-        btnUltimaVenta.setBackground(new Color(200, 222, 233));
-        btnUltimaVenta.setForeground(new Color(21, 101, 192));
-        btnUltimaVenta.setFocusPainted(false);
-        btnUltimaVenta.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnUltimaVenta.setIcon(UIManager.getIcon("FileView.fileIcon"));
-        btnUltimaVenta.addActionListener(e -> {
+        JButton btnEmpleados = new JButton("Empleados");
+        btnEmpleados.setFont(btnFont);
+        btnEmpleados.setBackground(new Color(200, 222, 233));
+        btnEmpleados.setForeground(new Color(21, 101, 192));
+        btnEmpleados.setFocusPainted(false);
+        btnEmpleados.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        btnEmpleados.setIcon(UIManager.getIcon("FileView.fileIcon"));
+        btnEmpleados.addActionListener(e -> {
             String rolUsuario = ControladorLogin.getUsuarioActual().getRol();
 
             if ("Administrador".equalsIgnoreCase(rolUsuario)) {
@@ -156,7 +156,7 @@ public class VistaMenu extends JFrame {
         });
         //fin boton ultima venta
 
-        //inicio boton ultima compra (Registro de Usuarios)
+        //inicio boton empleados(Empleados)
         JButton btnUltimaCompra = new JButton("Registro de Usuarios");
         btnUltimaCompra.setFont(btnFont);
         btnUltimaCompra.setBackground(new Color(225, 245, 215));
@@ -177,36 +177,8 @@ public class VistaMenu extends JFrame {
                         JOptionPane.ERROR_MESSAGE);
             }
         });
-        //fin boton ultima compra
-
-        //inicio boton empleados
-        /*JButton btnEmpleados = new JButton("Empleados");
-        btnEmpleados.setFont(btnFont);
-        btnEmpleados.setBackground(new Color(255, 249, 196));
-        btnEmpleados.setForeground(new Color(21, 101, 192));
-        btnEmpleados.setFocusPainted(false);
-        btnEmpleados.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        btnEmpleados.setIcon(UIManager.getIcon("FileView.computerIcon"));
-        btnEmpleados.setPreferredSize(new Dimension(150, 40));
-
-        // RESTAURACIÓN DE LA RESTRICCIÓN DE ACCESO
-        btnEmpleados.addActionListener(e -> {
-            String rolUsuario = ControladorLogin.getUsuarioActual().getRol();
-
-            if ("Administrador".equalsIgnoreCase(rolUsuario)) {
-                ControladorEmpleado controlador = new ControladorEmpleado(null);
-                VistaEmpleados vista = new VistaEmpleados(controlador);
-                vista.setVisible(true);
-                controlador.setVista(vista);
-            } else {
-                JOptionPane.showMessageDialog(this,
-                        "Acceso Denegado. Solo el rol de Administrador puede gestionar empleados.",
-                        "Permiso Insuficiente",
-                        JOptionPane.WARNING_MESSAGE);
-            }
-        });*/
-
         //fin boton empleados
+
         //inicio boton salir
         JButton btnSalir = new JButton("Salir");
         btnSalir.setFont(new Font("Segoe UI", Font.BOLD, 20));
@@ -235,15 +207,9 @@ public class VistaMenu extends JFrame {
 
         gbc.gridy = 3;
         gbc.gridx = 0;
-        panel.add(btnUltimaVenta, gbc);
+        panel.add(btnEmpleados, gbc);
         gbc.gridx = 1;
         panel.add(btnUltimaCompra, gbc);
-
-        gbc.gridy = 4;
-        gbc.gridx = 0;
-        gbc.gridwidth = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        panel.add(btnEmpleados, gbc);
 
         gbc.gridy = 5;
         gbc.gridx = 0;
