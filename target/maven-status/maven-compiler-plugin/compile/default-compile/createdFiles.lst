@@ -27,8 +27,10 @@ CONTROLADOR\ControladorEmpleado.class
 VISTA\VistaLogin$1.class
 CONTROLADOR\ClienteControlador.class
 CONTROLADOR\Conexion.class
+VISTA\VistaRegistrarVenta$2.class
 VISTA\VistaMenu$1.class
 VISTA\VistaRegistrarCompra$1.class
 VISTA\VistaLogueoUsuarios.class
 MODELO\EmpleadoDAO.class
+MODELO\ProductoDAO.class
 VISTA\VistaProductos$1.class
