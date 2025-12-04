@@ -17,10 +17,11 @@ public class ModeloConexion {
     public ModeloConexion() {
         try {
             conn = DriverManager.getConnection(
-                    "jdbc:postgresql://localhost:5432/tuBD",
-                    "postgres",
-                    "123"
+                "jdbc:postgresql://localhost:5432/MercaTop",
+                "postgres",
+                "admin"
             );
+            System.out.println("Conexión correcta desde ModeloConexion");
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -29,9 +30,10 @@ public class ModeloConexion {
     // Autenticar usuario y registrar login
     public UsuarioBD autenticarUsuario(String usuario, String contrasena) {
         // Seleccionamos el usuario y su rol desde UsuarioBD y Trabajadores
-        String sql = "SELECT u.ID_Usuario, u.Nombre_Usuario, u.Contraseña, t.Rol, t.Nombre_Trabajador " +
+        String sql = "SELECT u.ID_Usuario, u.Nombre_Usuario, u.Contraseña, " +
+                     "t.Rol, t.Nombre_Trabajador " +
                      "FROM UsuarioBD u " +
-                     "JOIN Trabajadores t ON u.Nombre_Usuario = t.Nombre_Trabajador " +
+                     "JOIN Trabajadores t ON u.ID_Trabajador = t.ID_Trabajador " +
                      "WHERE u.Nombre_Usuario = ? AND u.Contraseña = ?";
 
         try {
